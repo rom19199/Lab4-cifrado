@@ -4,7 +4,8 @@ Created on Thu Aug 19 22:38:33 2021
 
 @author: hugo_
 """
-
+from random import randint
+import random
 import math
 import scipy.special as ss
 from fractions import Fraction
@@ -254,9 +255,9 @@ def test5(cadena, th=0.01):
 import scipy.special as ss
 
 def padding(string, n):
-	while len(string) <n:
-		string = '0' + string
-	return input
+    while len(string) <n:
+        string = '0' + string
+    return input
 
 def berlekamp_massey(string):
     n = len(string)
@@ -638,12 +639,29 @@ def LGC(a,b,mod,k=1,shape=1):
         s = s + bts[-k:]
     return s
 
+def Wichmann_Hill(listlength):
+    seed1 = randint(1, 30000)
+    seed2 = randint(1, 30000)
+    seed3 = randint(1, 30000)
+    k = ''
+    for _ in range(listlength):
+        seed1 = 171 * seed1 % 30269
+        seed2 = 172 * seed2 % 30307
+        seed3 = 170 * seed3 % 30323
+        numlist = ((float(seed1)/30269 + float(seed2)/30307 + float(seed3)/30323) % 1)
+        k += str(round(numlist))   
+    return k
+
 mod = 2**15 - 1
-a = 23550
+c = 23550
 b = 12964
 n = 40000
-s = LGC(a,b,mod,8,n)
+listlength = 28000
+s = LGC(c,b,mod,8,n)
+k = Wichmann_Hill(listlength)
+
 print(len(s))
+print(len(k))
 
 # tests = [test,test2,test3,test4,test5,test6,test7,test8,test9,test10]
 tests = [test,test2,test3,test4,test5,test6,test7,test8,test9,test10]
@@ -659,7 +677,8 @@ n = 200
 frequ = np.zeros((n,len(tests))).astype(int)
 
 for i in range(0,n):
-    s = LGC(a,b,mod,8,n)
+    #s = LGC(c,b,mod,8,n)
+    k = Wichmann_Hill(listlength)
     for j in range(0,len(tests)):
         _,res = tests[j](s,th=0.01)
         frequ[i,j]  = int(res)
